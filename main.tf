@@ -1,3 +1,4 @@
+
 # FIAP MBA - Exercicio de infraestrutura com Terraform
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
@@ -14,6 +15,7 @@ terraform {
       version = "3.4.3"
     }
   }
+
   required_version = ">= 1.1.0"
 
   cloud {
@@ -64,13 +66,15 @@ resource "aws_instance" "web" {
 
 resource "aws_security_group" "web-sg" {
   name = "${random_pet.sg.id}-sg"
+
   ingress {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  // connectivity to ubuntu mirrors is required to run `apt-get update` and `apt-get install apache2`
+
+  # Permite acesso aos repositorios Ubuntu para instalar o Apache
   egress {
     from_port   = 0
     to_port     = 0
@@ -79,8 +83,9 @@ resource "aws_security_group" "web-sg" {
   }
 }
 
+/*
 resource "aws_iam_user" "new_user" {
-  name = "User_Fiap" # Nome do novo usuário
+  name = "User_Fiap"
 
   tags = {
     Name = "Example User"
@@ -90,7 +95,6 @@ resource "aws_iam_user" "new_user" {
 resource "aws_iam_access_key" "new_user_access_key" {
   user = aws_iam_user.new_user.name
 
-  # Garanta que as chaves de acesso sejam geradas apenas uma vez
   lifecycle {
     create_before_destroy = true
   }
@@ -98,8 +102,9 @@ resource "aws_iam_access_key" "new_user_access_key" {
 
 resource "aws_iam_user_policy_attachment" "new_user_policy_attachment" {
   user       = aws_iam_user.new_user.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess" # Política de exemplo (permissão de acesso total ao Amazon S3)
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
+*/
 
 output "web-address" {
   value = "${aws_instance.web.public_dns}:8080"
